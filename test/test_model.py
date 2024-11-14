@@ -5,7 +5,7 @@ from mlflow.pyfunc import load_model
 from mlflow.tracking import MlflowClient
 
 from nubison_model import NubisonModel, register
-from nubison_model.Model import _make_artifact_dir_dict, _package_list_from_file
+from nubison_model.Model import _make_artifacts_dict, _package_list_from_file
 from test.utils import temporary_cwd, temporary_dirs, temporary_env
 
 
@@ -112,9 +112,9 @@ def test_artifact_dirs_from_env():
     Test creating the artifact directories dictionary from the environment or parameter.
     """
     with temporary_env({"ARTIFACT_DIRS": ""}):
-        assert _make_artifact_dir_dict(None) == {}
-        assert _make_artifact_dir_dict("src, test") == {"src": "src", "test": "test"}
+        assert _make_artifacts_dict(None) == {}
+        assert _make_artifacts_dict("src, test") == {"src": "src", "test": "test"}
 
     with temporary_env({"ARTIFACT_DIRS": "src"}):
-        assert _make_artifact_dir_dict(None) == {"src": "src"}
-        assert _make_artifact_dir_dict("src,test") == {"src": "src", "test": "test"}
+        assert _make_artifacts_dict(None) == {"src": "src"}
+        assert _make_artifacts_dict("src,test") == {"src": "src", "test": "test"}

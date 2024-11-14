@@ -78,20 +78,22 @@ def _make_conda_env() -> dict:
     }
 
 
-def _make_artifact_dir_dict(artifact_dirs: Optional[str]) -> dict:
+def _make_artifacts_dict(artifact_dirs: Optional[str]) -> dict:
     # Get the dict of artifact directories.
     # If not provided, read from environment variables, else use the default
-    artifact_dirs_from_param_or_env = (
+    artifact_dirs_str_from_param_or_env = (
         artifact_dirs
         if artifact_dirs is not None
         else getenv("ARTIFACT_DIRS", DEFAULT_ARTIFACT_DIRS)
     )
+    artifacts = set(artifact_dirs_str_from_param_or_env.split(","))
+
+    if path.exists("Dockerfile"):
+        artifacts.add("Dockerfile")
 
     # Return a dict with the directory as both the key and value
     return {
-        dir.strip(): dir.strip()
-        for dir in artifact_dirs_from_param_or_env.split(",")
-        if dir != ""
+        artifact.strip(): artifact.strip() for artifact in artifacts if artifact != ""
     }
 
 
@@ -160,7 +162,7 @@ def register(
             registered_model_name=model_name,
             python_model=_make_mlflow_model(model),
             conda_env=_make_conda_env(),
-            artifacts=_make_artifact_dir_dict(artifact_dirs),
+            artifacts=_make_artifacts_dict(artifact_dirs),
             model_config=DEFAULT_MODEL_CONFIG,
             artifact_path="",
         )

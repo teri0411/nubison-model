@@ -8,6 +8,7 @@ version = "0.0.0"
 description = ""
 authors = ["KyuWoo Choi <kyuwoo.choi@gmail.com>"]
 readme = "README.md"
+include = ["nubison_model/Dockerfile"]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
